@@ -15,8 +15,9 @@ def roll_dices() -> int:
 
 
 class Game:
-    def __init__(self, players):
+    def __init__(self, players: list[Player], points_to_win: int):
         self.players = players
+        # TODO: all functions that include the board should get them
         self.board = Board(players)
 
     def loop(self):
@@ -38,6 +39,12 @@ class Game:
 
     def next_player(self) -> Player:
         return self.players[next(next_player_index())]
+
+    def has_winner(self):
+        for player in players:
+            if player.points >= self.points_to_win:
+                return True
+        return False
 
     def place_starting_villages_and_streets(self) -> None:
         for player in self.players:
@@ -81,7 +88,7 @@ class Game:
                 self.execute_card(card, player)
                 played_card = True
             elif decision == "trade":
-                player.trade()
+                self.trade()
             else:
                 break
 
@@ -101,7 +108,7 @@ class Game:
             total_count = 0
             for player in self.players:
                 if player == current_player:
-                    pass
+                    continue
                 amount = player.remove_resources(
                     desired
                 )  # remove the resources and return the amount
@@ -115,6 +122,6 @@ class Game:
         )  # [reaction, other_offer]. Reaction can be "accept","decline","change"
         for player in self.players:
             if player == current_player:
-                pass
+                continue
             reactions.append(player.react_to_offer())
         # TODO: finish trading
