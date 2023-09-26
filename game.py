@@ -17,12 +17,12 @@ def roll_dices() -> int:
 class Game:
     def __init__(self, players: list[Player], points_to_win: int):
         self.players = players
-        # TODO: all functions that include the board should get them
         self.board = Board(players)
+        self.points_to_win = points_to_win
 
     def loop(self):
         # pregame. Everyone places 2 villages and 2 roads
-        self.place_starting_villages_and_streets()
+        self.place_starting_villages_and_roads()
         current_player = self.next_player()
         while True:
             if self.has_winner():
@@ -33,7 +33,7 @@ class Game:
                 self.rob(current_player)
             self.give_resources()
             self.play(current_player)
-            self.update_longest_street()
+            self.update_longest_road()
             self.update_army()
             current_player = self.next_player()
 
@@ -41,14 +41,13 @@ class Game:
         return self.players[next(next_player_index())]
 
     def has_winner(self):
-        for player in players:
+        for player in self.players:
             if player.points >= self.points_to_win:
                 return True
         return False
 
-    def place_starting_villages_and_streets(self) -> None:
+    def place_starting_villages_and_roads(self) -> None:
         for player in self.players:
-            # tuple [Node,Node]. First Node is village. second is node where road should go to
             nodes = player.village_and_road()
             self.board.place_village_and_road(nodes)
         for i in range(len(self.players), -1, -1):
@@ -80,9 +79,9 @@ class Game:
             elif decision == "city":
                 position = player.city_position()
                 self.board.place_city(position, player)
-            elif decision == "street":
-                nodes = player.street_position()
-                self.board.place_street(nodes)
+            elif decision == "road":
+                nodes = player.road_position()
+                self.board.place_road(nodes)
             elif decision == "play_card" and played_card:
                 card = player.play_card()
                 self.execute_card(card, player)
@@ -96,11 +95,11 @@ class Game:
         if card == "knight":
             self.rob(current_player)
             current_player.army += 1
-        elif card == "street":
-            nodes = current_player.street_position()
-            self.board.place_street(nodes)
-            nodes = current_player.street_position()
-            self.board.place_street(nodes)
+        elif card == "road":
+            nodes = current_player.road_position()
+            self.board.place_road(nodes)
+            nodes = current_player.road_position()
+            self.board.place_road(nodes)
         elif card == "cards":
             current_player.add_two_resources_because_of_action_card()
         elif card == "monopoly":
@@ -109,11 +108,11 @@ class Game:
             for player in self.players:
                 if player == current_player:
                     continue
-                amount = player.remove_resources(
+                amount = player.remove(
                     desired
                 )  # remove the resources and return the amount
                 total_count += amount
-            current_player.add_resources([desired] * total_count)
+            current_player.add([desired] * total_count)
 
     def trade(self, current_player: Player) -> None:
         offer = current_player.offer()  # (give,get)
