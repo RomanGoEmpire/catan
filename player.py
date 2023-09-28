@@ -38,7 +38,7 @@ class Player:
     def rob(self, board, player):
         pass
 
-    def select_tile_for_robber():
+    def select_tile_for_robber(self):
         pass
 
     def place_village(self, board):
@@ -68,10 +68,10 @@ class Player:
     def add_two_resources_because_of_action_card(self):
         pass
 
-    def monopoly_resources(self):
+    def monopoly_resource(self):
         pass
 
-    def remove(self):
+    def remove(self, resource):
         pass
 
     def offer(self):

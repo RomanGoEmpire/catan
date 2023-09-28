@@ -1,6 +1,7 @@
 from random import randint
 from board import Board
 from player import Player
+from bank import Bank
 
 
 def next_player_index():
@@ -19,6 +20,7 @@ class Game:
         self.players = players
         self.board = Board(players)
         self.points_to_win = points_to_win
+        self.bank = Bank()
 
     def loop(self):
         # pregame. Everyone places 2 villages and 2 roads
@@ -51,12 +53,14 @@ class Game:
             nodes = player.village_and_road()
             self.board.place_village_and_road(nodes)
         for i in range(len(self.players), -1, -1):
-            player.place_village_and_road()
+            nodes = player.village_and_road()
+            self.board.place_village_and_road(nodes)
 
     def remove_too_many_cards(self) -> None:
         for player in self.players:
             if player.cards > 7:
-                player.discard_cards()
+                discarded_cards = player.discard_cards()
+                self.bank.add(discarded_cards)
 
     def rob(self, current_player: Player) -> None:
         tile = current_player.select_tile_for_robber()
@@ -104,15 +108,13 @@ class Game:
             current_player.add_two_resources_because_of_action_card()
         elif card == "monopoly":
             desired = current_player.monopoly_resource()
-            total_count = 0
+            amount = 0
             for player in self.players:
                 if player == current_player:
                     continue
-                amount = player.remove(
-                    desired
-                )  # remove the resources and return the amount
-                total_count += amount
-            current_player.add([desired] * total_count)
+                removed_cards = player.remove(desired)
+                amount += len(removed_cards)
+            current_player.add([desired] * amount)
 
     def trade(self, current_player: Player) -> None:
         offer = current_player.offer()  # (give,get)
