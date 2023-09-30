@@ -1,5 +1,5 @@
 from random import randint, shuffle
-from node import TileNode
+from node import TileNode, BuildingNode
 
 TOTAL_TILES = 18
 RESOURCES = [
@@ -51,12 +51,33 @@ ADJACENCY_LIST = {
     17: [13, 14, 16, 18],
     18: [14, 15, 17],
 }
+BUILDING_NODE_LIST = {
+    0: [1, 2, 3, 4, 5, 6],
+    1: [2, 3, 7, 8, 9, 10],
+    2: [8, 9, 11, 12, 13, 14],
+    3: [4, 5, 15, 16, 17, 18],
+    4: [3, 4, 10, 15, 19, 20],
+    5: [9, 10, 14, 19, 21, 22],
+    6: [13, 14, 21, 23, 24, 25],
+    7: [16, 17, 26, 27, 28, 29],
+    8: [15, 16, 20, 26, 30, 31],
+    9: [19, 20, 22, 30, 32, 33],
+    10: [21, 22, 25, 32, 34, 35],
+    11: [21, 24, 25, 34, 36, 37],
+    12: [26, 27, 31, 39, 40, 41],
+    13: [30, 31, 33, 39, 42, 43],
+    14: [32, 33, 35, 42, 44, 45],
+    15: [34, 35, 38, 44, 46, 47],
+    16: [39, 40, 43, 48, 49, 50],
+    17: [42, 43, 45, 48, 51, 52],
+    18: [44, 45, 47, 51, 53, 54],
+}
 
 
 class Board:
     def __init__(self):
-        self.tile_nodes = None
-        self.building_nodes = None
+        # self.tile_nodes = []
+        # self.building_nodes = []
         self.board = self.generate_board()
 
     def __repr__(self):
@@ -91,9 +112,13 @@ class Board:
             else:
                 board[i] = TileNode(resources.pop(), numbers[count])
                 count += 1
+            board[i].building_nodes = [BuildingNode(id) for id in BUILDING_NODE_LIST[i]]
         return board
 
 
 if __name__ == "__main__":
     board = Board()
     print(board)
+    # for tile in board.board:
+    #     for building in tile.building_nodes:
+    #         print(building)
