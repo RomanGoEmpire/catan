@@ -52,32 +52,31 @@ ADJACENCY_LIST = {
     18: [14, 15, 17],
 }
 BUILDING_NODE_LIST = {
-    0: [1, 2, 3, 4, 5, 6],
-    1: [2, 3, 7, 8, 9, 10],
-    2: [8, 9, 11, 12, 13, 14],
-    3: [4, 5, 15, 16, 17, 18],
-    4: [3, 4, 10, 15, 19, 20],
-    5: [9, 10, 14, 19, 21, 22],
-    6: [13, 14, 21, 23, 24, 25],
-    7: [16, 17, 26, 27, 28, 29],
-    8: [15, 16, 20, 26, 30, 31],
-    9: [19, 20, 22, 30, 32, 33],
-    10: [21, 22, 25, 32, 34, 35],
-    11: [21, 24, 25, 34, 36, 37],
-    12: [26, 27, 31, 39, 40, 41],
-    13: [30, 31, 33, 39, 42, 43],
-    14: [32, 33, 35, 42, 44, 45],
-    15: [34, 35, 38, 44, 46, 47],
-    16: [39, 40, 43, 48, 49, 50],
-    17: [42, 43, 45, 48, 51, 52],
-    18: [44, 45, 47, 51, 53, 54],
+    0: [0, 1, 2, 3, 4, 5],
+    1: [1, 2, 6, 7, 8, 9],
+    2: [7, 8, 10, 11, 12, 13],
+    3: [3, 4, 14, 15, 16, 17],
+    4: [2, 3, 9, 14, 18, 19],
+    5: [8, 9, 13, 18, 20, 21],
+    6: [12, 13, 20, 22, 23, 24],
+    7: [15, 16, 25, 26, 27, 28],
+    8: [14, 15, 19, 25, 29, 30],
+    9: [18, 19, 21, 29, 31, 32],
+    10: [20, 21, 24, 31, 33, 34],
+    11: [20, 23, 24, 33, 35, 36],
+    12: [25, 26, 30, 38, 39, 40],
+    13: [29, 30, 32, 38, 41, 42],
+    14: [31, 32, 34, 41, 43, 44],
+    15: [33, 34, 37, 43, 45, 46],
+    16: [38, 39, 42, 47, 48, 49],
+    17: [41, 42, 44, 47, 50, 51],
+    18: [43, 44, 46, 50, 52, 53],
 }
 
 
 class Board:
     def __init__(self):
-        # self.tile_nodes = []
-        # self.building_nodes = []
+        self.building_nodes = [BuildingNode(id) for id in range(54)]
         self.board = self.generate_board()
 
     def __repr__(self):
@@ -112,13 +111,18 @@ class Board:
             else:
                 board[i] = TileNode(resources.pop(), numbers[count])
                 count += 1
-            board[i].building_nodes = [BuildingNode(id) for id in BUILDING_NODE_LIST[i]]
+            board[i].building_nodes = [
+                self.building_nodes[i] for i in BUILDING_NODE_LIST[i]
+            ]
         return board
 
 
 if __name__ == "__main__":
     board = Board()
     print(board)
-    # for tile in board.board:
-    #     for building in tile.building_nodes:
-    #         print(building)
+    print(board.building_nodes)
+    for tile in board.board:
+        print(tile.building_nodes)
+    board.building_nodes[2].building = 1
+    for tile in board.board:
+        print(tile, tile.building_nodes)

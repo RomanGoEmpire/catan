@@ -1,3 +1,6 @@
+from node import BuildingNode
+
+
 class Player:
     def __init__(self, name: str, color: str, position: int):
         # permanent
@@ -11,6 +14,8 @@ class Player:
         self.village_tiles = 5
         self.cities_tiles = 4
         self.road_tiles = 15
+        self.building_nodes: list[BuildingNode] = []
+        self.roads: list[tuple[BuildingNode, BuildingNode]] = []
 
         self.army = 0
 

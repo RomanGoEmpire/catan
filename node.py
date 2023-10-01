@@ -23,7 +23,7 @@ class BuildingNode(Node):
         self.player = None
         self.streets = []
 
-    def _repr__(self):
+    def __repr__(self):
         return str(self)
 
     def __str__(self):
